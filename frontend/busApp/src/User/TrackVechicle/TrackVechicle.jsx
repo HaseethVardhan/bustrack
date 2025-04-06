@@ -108,9 +108,6 @@ function Card({busNumber,busNumberPlate,contactInfo,route,age,name,busStatus})
             <h2>Driver Contact Information : {contactInfo}</h2>
             <div className="flex">Bus Status : &nbsp; {busStatus === "active"?<h1 className="w-[20px] h-[20px] rounded-full animate-pulse bg-green-600"></h1>:<h1 className="w-[20px] h-[20px]rounded-full animate-pulse bg-red-600"></h1>}</div>
         </div>
-        <div className="text-[#9A9A9A]">
-                Enjoying your ride? <Link to={`/user/feedback/${id}`} className="text-red-600">Provide feedback</Link>
-        </div>
         </div>
     )
 }

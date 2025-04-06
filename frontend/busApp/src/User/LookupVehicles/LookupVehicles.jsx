@@ -15,7 +15,6 @@ function Card({busNumber,route ,active,objectId, eta, rating})
         <div onClick={() => {
             setRoute(route);
         }} className="ml-2 rounded-2xl bg-[#E93F4B] w-[400px] h-[190px] text-white p-4">
-            <h1 className={"font-bold text-2xl"}>ETA: {(eta)?eta.progress?eta.progress[eta.progress.length-1].eta:"N/A":"N/A"}</h1>
             <div className={""}>
                 <div className={"flex flex-row gap-[5px] items-center"}>
                     <div className="w-3 h-3 bg-[#38B3F9] rounded-full "></div>
