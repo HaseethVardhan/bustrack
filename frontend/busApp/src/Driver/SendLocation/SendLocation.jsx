@@ -191,7 +191,11 @@ export function Map()
         }
         else
         {
-            navigate("/driver/dashboard")
+            axios.post(`${SERVER_URL}/api/v1/deactivateBus/${id}`, axiosConfig)
+                .then(() => {
+                    navigate("/driver/dashboard")
+                })
+                .catch(error => console.error('Error updating bus status:', error));
         }
     }
 

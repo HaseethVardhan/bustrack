@@ -51,7 +51,7 @@ function RegisterDriver()
                 name,
                 contactInfo:contact,
                 password,
-                photo:fileDetails
+                // photo:fileDetails
             }
             console.log(payload)
             const response=await axios.post(`${SERVER_URL}/api/v1/register`,payload,{
@@ -126,13 +126,13 @@ function RegisterDriver()
                     <button onClick={viewPassword} className="">{toggle === "password"? <PasswordSVG />:<HidePasswordSVG />}</button>
                 </div>
                 
-                <div className="flex items-center h-[50px] w-[290px]">
+                {/* <div className="flex items-center h-[50px] w-[290px]">
                     <span className="text-[23px] mr-[6px]">PUC:</span>
                     <input className="text-[#5F5E5E] border-none" type="file" accept="image/*" onChange={(e)=>
                         {
                             setFileDetails(e.target.files[0])}
                         }/>
-                </div>
+                </div> */}
 
                 <div className="flex flex-col items-center space-y-5">
                     <h1 className="text-[15px]">Have an account already ? <button onClick={changePage} className="text-[#E93F4B]">Sign In</button></h1>

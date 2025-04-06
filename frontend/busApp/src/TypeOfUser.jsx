@@ -2,20 +2,7 @@ import {Link} from "react-router-dom";
 import chatBot from "./assets/chatBot.png";
 import main from "./assets/reg.jpg"
 import "./App.css"
-function ChatBot(){
-    return  (
-     <df-messenger id="test"
-         intent="WELCOME"
-         agent-id="d4bf08d1-af6b-47bc-af2d-953093470fab"
-         language-code="en"
-         placeholder-text="Ask something"
-         bot-writing-text="Just a minute"
-         chat-title="NAMSKARAM-Vehicle Tracking Chatbot Assistant"
-         chat-icon={chatBot}
-         df-messenger-button-titlebar-color="#e93f4b"
-     ></df-messenger>
-   )
-}
+
 
 function TypeOfUser()
 {
@@ -49,7 +36,7 @@ function TypeOfUser()
                             <h1 className={"text-[40px] text-white font-medium text-center"}>User</h1>
                     </div>
                 </div>
-                <ChatBot/>
+                
         </div>
     )
 }

@@ -1,14 +1,16 @@
 import { BUS } from "../model/busModel.js";
 import { ROUTE } from "../model/routeModel.js";
 import { STATION } from "../model/stationModel.js";
-import cloudinary from "cloudinary";
 import { cache } from "../Cache/cache.js";
 import { FEEDBACK } from "../model/feedbackModel.js";
-import { uploadOnCloudinary } from "../cloudStorage.js";
+
+
 
 export const register = async function (req, res) {
   try {
     const { busNumber, busNumberPlate, name, contactInfo, password } = req.body;
+
+    console.log(busNumber, busNumberPlate, name, contactInfo, password )
 
     if (
       [busNumber, busNumberPlate, name, contactInfo, password].some(
@@ -21,49 +23,39 @@ export const register = async function (req, res) {
       });
     }
 
+    
+    
     const existedDriver = await BUS.findOne({
       $and: [{ busNumberPlate }, { contactInfo }],
     });
-
+    
+    
     if (existedDriver) {
       return res.status(400).json({
         success: false,
         message: "Driver Already Exixts",
       });
     }
-
-    const imageUrl = await uploadOnCloudinary(req.files.image1[0].path);
-
-    console.log(imageUrl)
-
-    if (!imageUrl) {
-      res.status(400).json({
-        success: false,
-        message: "cannot get file path in register",
-      });
-    }
-
-    let photos = {
-      public_id: imageUrl.public_id,
-      secure_url: imageUrl.url,
-    };
-
+    
     let createdBus = await BUS.create({
       busNumber,
       busNumberPlate,
       driver: { name, contactInfo, password },
-      photo: photos,
     });
-
+    
+    
     console.log(createdBus)
-
+    
+    
     const showUser = await BUS.findById(createdBus._id).select("-password");
-
+    
+    
     if (!showUser)
       return res.status(400).json({
-        success: false,
-        message: "error in registering user",
-      });
+    success: false,
+    message: "error in registering user",
+  });
+  c
 
     return res.status(200).json({
       success: true,
@@ -133,6 +125,34 @@ export const activeBus = async function (req, res) {
   }
 };
 
+export const deactivateBus = async function (req, res) {
+  try {
+    const { id } = req.params;
+    const bus = await BUS.findById(id);
+
+    if (!bus) {
+      return res.status(404).json({
+        success: false,
+        message: "Bus not found"
+      });
+    }
+
+    bus.busStatus = "notactive";
+    await bus.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Bus deactivated successfully"
+    });
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).json({
+      success: false,
+      message: "Error deactivating bus"
+    });
+  }
+};
+
 export const updateBusDetails = async function (req, res) {
   //getting id of that particular bus
 
@@ -185,7 +205,7 @@ export const activeBusDetails = async function (req, res) {
 };
 
 export const busRoutes = async function (req, res) {
-  const allRoutes = await SCHEMA.find().populate("stations");
+  const allRoutes = await ROUTE.find().populate("stations");
 
   res.status(200).json({
     success: true,

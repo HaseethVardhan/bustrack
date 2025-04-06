@@ -37,101 +37,6 @@ const MemoizedDirectionsService = React.memo(({ directionsOptions, setDirections
     }}/>
 ));
 
-function PanicButton({busDetails})
-{
-    const {id}=useParams()
-    let [latitude,setLatitude]=useState(0)
-    let [longitude,setLongitude]=useState(0)
-    let emergencyaudio=new Audio(stopAudio)
-    const {socket} = useContext(SocketContext);
-    const [panicDetails,setPanicDetails]=useState({
-        alertId:"",
-        alertLatitude:"",
-        alertLongitude:"",
-        alertSignal:false
-    }) 
-    const [audio,setAudio]=useState(null)
-
-    //listening for coordinates
-    useEffect(()=>{
-    navigator.geolocation.getCurrentPosition((position)=>{
-        setLatitude(position.coords.latitude)
-        setLongitude(position.coords.longitude)
-    })},[latitude,longitude])
-
-
-    //listening for PANIC ALARM
-    useEffect(()=>{
-        socket.on("sendAlarm",(payload)=>{
-            toast.warn("An Emergency Occured",{
-                autoClose:1000,
-                position:"top-center",
-                theme:"dark"
-            })
-            setPanicDetails({...panicDetails,alertId:`${payload.id}`,alertLatitude:`${payload.latitude}`,alertLongitude:`${payload.longitude}`,alertSignal:true})
-            
-            emergencyaudio.play()
-            setAudio(emergencyaudio)
-        })
-    },[])
-
-    //sending the EVENT
-    function panic()
-    {
-        console.log("pressed")
-        let payload={
-            id,
-            latitude,
-            longitude
-        }
-        socket.emit("panicAlarm",payload);
-
-        const sosPayload = {
-            "recipientAddress": adminAddress,
-            "subject": "SOS",
-            "message": `Emergency on BusNumber ${busDetails.busNumber} on route: ${busDetails.route.routeName}
-            Driver Name: ${busDetails.driver.name},
-            Driver Contact: ${busDetails.driver.contactInfo},
-            Live Location: http://localhost:5173/bus-real#/user/trackVehicle/6507b12bb75297ebd9110f8b
-            `
-        }
-
-        axios.post(`https://sos-message.azurewebsites.net/api/sos-mail?code=_kVVzKkAx9GlalN6MWe7l9QGTMsRH9MKckEB5_ysjPzgAzFucyZDmg==`,sosPayload).then((response) => console.log(response));
-    }
-
-    return (<>
-    <div className="mt-10 flex flex-col items-center mb-[30px]">
-    <button
-  className="w-[100px] h-[100px] bg-red-600 border-2 border-red-700 rounded-full text-white text-[20px] focus:outline-none relative overflow-hidden transform transition-transform duration-100 hover:-translate-y-0.5 active:translate-y-0.5 active:bg-red-700 active:scale-95 shadow-custom2"
-  onClick={panic}
->PANIC!
-  <div className="absolute inset-0 flex items-center justify-center bg-opacity-0 bg-white hover:bg-opacity-30 transition-opacity duration-100 opacity-0 active:opacity-100">
-    PANIC!
-  </div>
-</button>
-    <div className="flex flex-col items-center justify-center">
-    {panicDetails.alertSignal === true ? <div className="w-[400px] h-[100px] border-2 bg-black text-white">
-        <h1>Bus ID :-{panicDetails.alertId}</h1>
-        <h1>Alert Latitude :- {panicDetails.alertLatitude} </h1>
-        <h1>Alert Longitude :- {panicDetails.alertLongitude}</h1>
-        <button onClick={()=>{
-            if(audio)
-            {
-                console.log(audio)
-                audio.pause()
-                setAudio(null)
-            }
-            setPanicDetails({...panicDetails,alertSignal:false})
-        }} className="bg-red-700 text-white ">Ignore Notification</button>
-    </div>:<h1></h1>}
-    <ToastContainer />
-    </div>
-    </div>
-    </>
-    )
-}
-
-
 function Map()
 {
     const {socket} = useContext(SocketContext);
@@ -253,7 +158,6 @@ export function TrackVechicle()
             <h1 className="relative top-[30px] right-[60px] text-[#9A9A9A] text-[20px]">PASSENGER COUNT : <span className="text-[black]">{passenger}/60</span></h1>
             <div className="flex h-[90vh] justify-between items-center w-[60%]">
                     {isLoading ?<h1> Loading... </h1>:<Card key={dataReceived._id} busNumber={dataReceived.busNumber} busNumberPlate={dataReceived.busNumberPlate} contactInfo={dataReceived.driver.contactInfo} route={dataReceived.route} age={dataReceived.driver.age} name={dataReceived.driver.name} busStatus={dataReceived.busStatus}  objectId={dataReceived._id}/>}
-                <PanicButton className={""}  busDetails={dataReceived}/>
             </div>
             </div>
         )

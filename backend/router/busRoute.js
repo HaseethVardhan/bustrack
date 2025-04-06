@@ -1,7 +1,7 @@
 import express from "express"
 
 import { upload } from "../middlewares/multer.middleware.js"
-import {register,login,activeBus,updateBusDetails,activeBusDetails, busRoutes,getFeedBack,allFeedBack,searchFeedBack} from "../controllers/busController.js"
+import {register,login,activeBus,updateBusDetails,activeBusDetails, busRoutes,getFeedBack,allFeedBack,searchFeedBack, deactivateBus} from "../controllers/busController.js"
 
 
 const router=express.Router()
@@ -19,6 +19,9 @@ router.route("/activeBus").get(activeBus)
 
 //route for seeing detail of particular active bus
 router.route("/activeBus/:id").get(activeBusDetails)
+
+//route for deactivating a bus
+router.route("/deactivateBus/:id").post(deactivateBus)
 
 //route for updating details of the particular bus
 router.route("/bus/:id").post(updateBusDetails)
