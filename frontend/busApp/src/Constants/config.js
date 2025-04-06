@@ -1,5 +1,5 @@
 
-const SERVER_URL = 'http://localhost:3000';
+const SERVER_URL = 'https://bustrack-backend.onrender.com';
 //const SERVER_URL = 'http://localhost:10000';
 
 //Bypass ngrok browser warning will work with localhost as well
